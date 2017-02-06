@@ -1,0 +1,84 @@
+<!DOCTYPE html><html><head><title>Taunting Elf</title>
+
+<link rel="stylesheet" type="text/css" href="style.css">
+<link rel="shortcut icon" href="favicon.ico">
+<meta name="viewport" content="width=550, initial-scale=1">
+
+</head>
+
+<body>
+	<center>
+
+		<table style="position:absolute; left:10px; top:10px; background-color:black;">
+			<td>
+				<a href="#popup1"><img title="Information" src="../jdgmiles.github.io/questionmark.png" style="width:60px; height:60px"></a><br>
+				<a href="https://twitter.com/jimdgmiles" target=blank_><img title="James Miles on Twitter" src="../jdgmiles.github.io/twitter.png" style="width:60px; height:60px"></a><br>
+				<a href="http://jdgmiles.github.io/" target="_blank"><img title="Projects Page" src="../jdgmiles.github.io/jdgm.png" style="width:60px; height:60px"></a><br>
+			</td>
+		</table>
+
+		<div id="popup1" class="overlay">
+			<div class="popup" style="text-align:center">
+				<a class="close" style="right: 30px;" href="#">&times;</a>
+				<div style="font-family:Georgia; color:white; text-decoration:underline; font-size:55px">Sound of Sadness</div><br>
+				<span style="font-family:Georgia; font-size:30px; color:white;">A page which progressively zooms an image to the Sound of Silence meme.<br><br>To set a custom image and settings use https://jdgmiles.github.io/Taunting-Elf/index.html? followed by the URL of the image you want to use, the x-coordinate of the focal point, the y-coordinate of the focal point, the zoom factor, then finally the frame rate.<br><br>For example: <a href="https://jdgmiles.github.io/Taunting-Elf/index.html?http://cookiesbecrumbling.com/img/cookies12.jpg,588,60,1.001,24#">https://jdgmiles.github.io/Taunting-Elf/<br>index.html?http://cookiesbecrumbling.com/<br>img/cookies12.jpg,588,60,1.001,24</a></span><br>
+			</div>
+		</div>
+
+		<br>
+		<canvas id="canvas" style="padding:0px 80px 0px 80px;"></canvas>
+		<br><br>
+  </center>
+</body>
+</html>
+
+<script type="text/javascript">
+
+var usedimage=new Image();
+var zoomed={width:0, height:0};
+var position={x:0, y:0};
+var focus={x:112, y:120};
+var zoomfactor=1.002;
+var fps=25;
+var audio=new Audio('The Sound of Silence.m4a');
+
+var inputfeed=location.search;
+
+if(inputfeed[0]=="?"){
+	var parameters=inputfeed.split(",");
+	usedimage.src=parameters[0].substring(1);
+	focus.x=parameters[1];
+	focus.y=parameters[2];
+	zoomfactor=parameters[3];
+	fps=parameters[4];
+}
+
+else{usedimage.src="Taunting Elf.jpg";}
+
+var canvas = document.getElementById("canvas");
+var ctx = canvas.getContext("2d");
+
+
+usedimage.onload = function() {
+	canvas.width=this.width;
+	canvas.height=this.height;
+	zoomed.width=this.width;
+	zoomed.height=this.height;
+	draw();
+	audio.play();
+}
+
+function draw(){
+
+	ctx.drawImage(usedimage, position.x, position.y, zoomed.width, zoomed.height);
+
+	position.x=position.x-zoomed.width*(zoomfactor-1)*focus.x/canvas.width;
+	position.y=position.y-zoomed.height*(zoomfactor-1)*focus.y/canvas.height;
+	zoomed.width=zoomed.width*zoomfactor;
+	zoomed.height=zoomed.height*zoomfactor;
+
+	setTimeout(draw, 1000/fps);
+
+}
+
+</script>
